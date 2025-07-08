@@ -45,6 +45,19 @@ export const useUserManagement = () => {
       setLoading(true);
 
       console.log('Fetching user organization data for user:', user.id);
+      console.log('User email:', user.email);
+
+      // Primeiro vamos verificar se o usuário tem um perfil
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      console.log('User profile data:', profileData);
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+      }
 
       // Buscar organização do usuário usando maybeSingle() para evitar erro se não encontrar
       const { data: orgData, error: orgError } = await supabase
@@ -60,6 +73,44 @@ export const useUserManagement = () => {
 
       if (!orgData) {
         console.log('User is not part of any organization');
+        
+        // Vamos verificar se existem organizações no sistema
+        const { data: allOrgs, error: allOrgsError } = await supabase
+          .from('organizations')
+          .select('*');
+        
+        console.log('All organizations in system:', allOrgs);
+        if (allOrgsError) {
+          console.error('Error fetching all organizations:', allOrgsError);
+        }
+
+        // Vamos verificar se existem membros no sistema
+        const { data: allMembers, error: allMembersError } = await supabase
+          .from('organization_members')
+          .select('*');
+        
+        console.log('All organization members in system:', allMembers);
+        if (allMembersError) {
+          console.error('Error fetching all members:', allMembersError);
+        }
+
+        // Tentar criar organização manualmente se não existir
+        if (!profileData) {
+          console.log('Profile not found, user might need to complete registration');
+          toast({
+            title: "Perfil não encontrado",
+            description: "Parece que seu perfil não foi criado. Tente fazer logout e login novamente.",
+            variant: "destructive"
+          });
+        } else {
+          console.log('Profile exists but no organization found. This should not happen.');
+          toast({
+            title: "Organização não encontrada",
+            description: "Sua organização não foi criada automaticamente. Entre em contato com o suporte.",
+            variant: "destructive"
+          });
+        }
+        
         setLoading(false);
         return;
       }

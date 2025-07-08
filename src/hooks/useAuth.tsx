@@ -1,4 +1,3 @@
-
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -79,19 +78,70 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      console.log('🔍 Iniciando login com Google...');
+      console.log('🌐 Current URL:', window.location.origin);
       
-      const { error } = await supabase.auth.signInWithOAuth({
+      // Verificar se o popup será bloqueado
+      const testPopup = window.open('', '', 'width=1,height=1');
+      if (!testPopup || testPopup.closed) {
+        console.error('❌ Popup bloqueado pelo navegador');
+        return { error: { message: 'Popup bloqueado. Permita popups para este site.' } };
+      }
+      testPopup.close();
+      
+      const redirectUrl = `${window.location.origin}/`;
+      console.log('🔄 Redirect URL configurada:', redirectUrl);
+      
+      console.log('🚀 Chamando signInWithOAuth...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         }
       });
       
-      return { error };
+      console.log('📊 Resposta do signInWithOAuth:', { data, error });
+      
+      if (error) {
+        console.error('❌ Erro no Google OAuth:', error);
+        console.error('❌ Detalhes do erro:', {
+          message: error.message,
+          status: error.status,
+          name: error.name
+        });
+        
+        // Verificar tipos específicos de erro
+        if (error.message?.includes('fetch')) {
+          return { error: { message: 'Erro de conexão. Verifique sua internet e tente novamente.' } };
+        }
+        
+        if (error.message?.includes('popup')) {
+          return { error: { message: 'Popup foi bloqueado. Permita popups para este site.' } };
+        }
+        
+        if (error.message?.includes('cors') || error.message?.includes('CORS')) {
+          return { error: { message: 'Erro de configuração. Contate o suporte.' } };
+        }
+        
+        return { error };
+      }
+      
+      console.log('✅ Google OAuth iniciado com sucesso');
+      return { error: null };
     } catch (error) {
-      console.error('Google sign in error:', error);
-      return { error };
+      console.error('💥 Erro inesperado no Google sign in:', error);
+      console.error('💥 Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+      
+      // Verificar se é erro de rede
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        return { error: { message: 'Erro de conexão com o servidor. Verifique sua conexão com a internet.' } };
+      }
+      
+      return { error: { message: 'Erro inesperado. Tente novamente em alguns instantes.' } };
     }
   };
 

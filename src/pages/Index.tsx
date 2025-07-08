@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,21 +83,53 @@ const Index = () => {
   };
 
   const handleGoogleLogin = async () => {
+    console.log('🎯 Botão do Google clicado');
     setIsLoading(true);
+    
     try {
+      // Verificar configurações do ambiente
+      console.log('🔧 Verificando configurações...');
+      console.log('🌍 Environment:', {
+        origin: window.location.origin,
+        href: window.location.href,
+        userAgent: navigator.userAgent.substring(0, 100)
+      });
+      
       const { error } = await signInWithGoogle();
       
       if (error) {
+        console.error('🚨 Erro retornado do signInWithGoogle:', error);
+        
+        // Mensagens de erro mais específicas e úteis
+        let errorMessage = "Erro no login com Google.";
+        
+        if (error.message?.includes('Popup bloqueado')) {
+          errorMessage = "Popup foi bloqueado pelo navegador. Permita popups para este site e tente novamente.";
+        } else if (error.message?.includes('conexão')) {
+          errorMessage = "Problema de conexão. Verifique sua internet e tente novamente.";
+        } else if (error.message?.includes('configuração')) {
+          errorMessage = "Erro de configuração do Google OAuth. Entre em contato com o suporte.";
+        } else if (error.message?.includes('refused') || error.message?.includes('recusada')) {
+          errorMessage = "Conexão recusada pelo Google. Verifique se:\n• Você tem conexão com a internet\n• O site está configurado corretamente\n• Tente em outro navegador";
+        }
+        
         toast({
           title: "Erro no login com Google",
-          description: error.message || "Não foi possível fazer login com Google.",
+          description: errorMessage,
           variant: "destructive"
+        });
+      } else {
+        console.log('✅ Login com Google iniciado com sucesso');
+        toast({
+          title: "Redirecionando...",
+          description: "Você será redirecionado para completar o login com Google."
         });
       }
     } catch (error) {
+      console.error('💥 Erro não capturado no handleGoogleLogin:', error);
       toast({
         title: "Erro no login com Google",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
+        description: "Ocorreu um erro inesperado. Tente novamente ou use o login com email.",
         variant: "destructive"
       });
     } finally {
@@ -245,7 +276,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Login Section - com botão do Google adicionado */}
+        {/* Login Section - com melhor tratamento de erros */}
         <div className="w-full max-w-md mx-auto">
           <Card className="backdrop-blur-xl bg-white/90 border-0 shadow-2xl shadow-blue-500/10">
             <CardContent className="p-8">
@@ -264,7 +295,7 @@ const Index = () => {
                 </TabsList>
                 
                 <TabsContent value="login" className="mt-8">
-                  {/* Botão do Google - adicionado antes do formulário */}
+                  {/* Botão do Google - com melhor feedback */}
                   <div className="space-y-4 mb-6">
                     <Button 
                       type="button"
@@ -279,7 +310,14 @@ const Index = () => {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                       </svg>
-                      {isLoading ? "Conectando..." : "Continuar com Google"}
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                          Conectando...
+                        </div>
+                      ) : (
+                        "Continuar com Google"
+                      )}
                     </Button>
                     
                     <div className="relative">
@@ -375,7 +413,7 @@ const Index = () => {
                 </TabsContent>
 
                 <TabsContent value="register" className="mt-8">
-                  {/* Botão do Google também no cadastro */}
+                  {/* Botão do Google também no cadastro com melhor feedback */}
                   <div className="space-y-4 mb-6">
                     <Button 
                       type="button"
@@ -390,7 +428,14 @@ const Index = () => {
                         <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                         <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                       </svg>
-                      {isLoading ? "Conectando..." : "Cadastrar com Google"}
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                          Conectando...
+                        </div>
+                      ) : (
+                        "Cadastrar com Google"
+                      )}
                     </Button>
                     
                     <div className="relative">

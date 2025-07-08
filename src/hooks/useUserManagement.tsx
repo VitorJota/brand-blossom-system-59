@@ -38,6 +38,68 @@ export const useUserManagement = () => {
 
   const canManageUsers = currentUserRole === 'owner' || currentUserRole === 'admin';
 
+  const createUserOrganization = async () => {
+    if (!user) return null;
+
+    try {
+      console.log('Creating organization for existing user:', user.id);
+
+      // Buscar dados do perfil do usuário
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (!profileData) {
+        throw new Error('Perfil do usuário não encontrado');
+      }
+
+      // Criar nome da organização
+      const userName = profileData.first_name && profileData.last_name
+        ? `${profileData.first_name} ${profileData.last_name}`.trim()
+        : profileData.email.split('@')[0];
+
+      const orgName = `${userName}'s Organization`;
+      const orgSlug = `${userName.toLowerCase().replace(/\s+/g, '-')}-${user.id.substring(0, 8)}`;
+
+      // Criar organização
+      const { data: orgData, error: orgError } = await supabase
+        .from('organizations')
+        .insert({
+          name: orgName,
+          slug: orgSlug
+        })
+        .select()
+        .single();
+
+      if (orgError) throw orgError;
+
+      // Adicionar usuário como owner
+      const { error: memberError } = await supabase
+        .from('organization_members')
+        .insert({
+          organization_id: orgData.id,
+          user_id: user.id,
+          role: 'owner'
+        });
+
+      if (memberError) throw memberError;
+
+      console.log('Organization created successfully:', orgData.id);
+      return orgData.id;
+
+    } catch (error) {
+      console.error('Error creating organization:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao criar organização. Tente novamente.",
+        variant: "destructive"
+      });
+      return null;
+    }
+  };
+
   const fetchUserData = async () => {
     if (!user) return;
 
@@ -45,21 +107,8 @@ export const useUserManagement = () => {
       setLoading(true);
 
       console.log('Fetching user organization data for user:', user.id);
-      console.log('User email:', user.email);
 
-      // Primeiro vamos verificar se o usuário tem um perfil
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      console.log('User profile data:', profileData);
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-      }
-
-      // Buscar organização do usuário usando maybeSingle() para evitar erro se não encontrar
+      // Buscar organização do usuário
       const { data: orgData, error: orgError } = await supabase
         .from('organization_members')
         .select('organization_id, role')
@@ -71,53 +120,24 @@ export const useUserManagement = () => {
         throw orgError;
       }
 
+      let currentOrgId = orgData?.organization_id;
+      let currentRole = orgData?.role;
+
+      // Se o usuário não faz parte de nenhuma organização, criar uma
       if (!orgData) {
-        console.log('User is not part of any organization');
+        console.log('User is not part of any organization, creating one...');
+        currentOrgId = await createUserOrganization();
+        currentRole = 'owner';
         
-        // Vamos verificar se existem organizações no sistema
-        const { data: allOrgs, error: allOrgsError } = await supabase
-          .from('organizations')
-          .select('*');
-        
-        console.log('All organizations in system:', allOrgs);
-        if (allOrgsError) {
-          console.error('Error fetching all organizations:', allOrgsError);
+        if (!currentOrgId) {
+          setLoading(false);
+          return;
         }
-
-        // Vamos verificar se existem membros no sistema
-        const { data: allMembers, error: allMembersError } = await supabase
-          .from('organization_members')
-          .select('*');
-        
-        console.log('All organization members in system:', allMembers);
-        if (allMembersError) {
-          console.error('Error fetching all members:', allMembersError);
-        }
-
-        // Tentar criar organização manualmente se não existir
-        if (!profileData) {
-          console.log('Profile not found, user might need to complete registration');
-          toast({
-            title: "Perfil não encontrado",
-            description: "Parece que seu perfil não foi criado. Tente fazer logout e login novamente.",
-            variant: "destructive"
-          });
-        } else {
-          console.log('Profile exists but no organization found. This should not happen.');
-          toast({
-            title: "Organização não encontrada",
-            description: "Sua organização não foi criada automaticamente. Entre em contato com o suporte.",
-            variant: "destructive"
-          });
-        }
-        
-        setLoading(false);
-        return;
       }
 
-      console.log('User organization data:', orgData);
-      setCurrentUserRole(orgData.role);
-      setOrganizationId(orgData.organization_id);
+      console.log('User organization data:', { organizationId: currentOrgId, role: currentRole });
+      setCurrentUserRole(currentRole);
+      setOrganizationId(currentOrgId);
 
       // Buscar membros da organização
       const { data: membersData, error: membersError } = await supabase
@@ -129,7 +149,7 @@ export const useUserManagement = () => {
           joined_at,
           profiles!organization_members_user_id_fkey (email, first_name, last_name)
         `)
-        .eq('organization_id', orgData.organization_id)
+        .eq('organization_id', currentOrgId)
         .order('joined_at', { ascending: true });
 
       if (membersError) {
@@ -144,7 +164,7 @@ export const useUserManagement = () => {
       const { data: invitesData, error: invitesError } = await supabase
         .from('user_invitations')
         .select('id, email, role, created_at, expires_at')
-        .eq('organization_id', orgData.organization_id)
+        .eq('organization_id', currentOrgId)
         .is('accepted_at', null);
 
       if (invitesError) {

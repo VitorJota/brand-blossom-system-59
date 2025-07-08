@@ -34,101 +34,89 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-16 items-center">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         
         {/* Hero Section */}
-        <div className="space-y-12 text-center lg:text-left">
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
-                Gerencie suas redes sociais de forma{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  profissional.
-                </span>
-              </h1>
-              
-              <h2 className="text-2xl lg:text-3xl text-gray-700 font-medium leading-relaxed">
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold">
-                  Com ou sem inteligência artificial
-                </span>{" "}
-                – você escolhe.
-              </h2>
-              
-              <div className="max-w-3xl">
-                <p className="text-xl lg:text-2xl text-gray-600 leading-relaxed">
-                  Planeje, agende, publique e acompanhe seus posts no Instagram e LinkedIn. 
-                  Com um toque a mais:{" "}
-                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold">
-                    nossa IA é capaz de criar textos e imagens por você.
-                  </span>
-                </p>
+        <div className="space-y-8 text-center lg:text-left">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white" />
               </div>
+              <span className="font-semibold text-gray-800">Seu Post</span>
             </div>
+            
+            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+              Gerencie suas redes sociais de forma{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                profissional.
+              </span>
+            </h1>
+            
+            <h2 className="text-xl lg:text-2xl text-gray-700 font-medium">
+              Com ou sem inteligência artificial – você escolhe.
+            </h2>
+            
+            <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl">
+              Planeje, agende, publique e acompanhe seus posts no Instagram e LinkedIn. 
+              Com um toque a mais: nossa IA é capaz de criar textos e imagens por você.
+            </p>
+          </div>
 
-            {/* Modern decorative elements */}
-            <div className="hidden lg:flex items-center justify-start gap-8 mt-16">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-transparent"></div>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
-                <div className="w-1 h-12 bg-gradient-to-b from-purple-500 to-transparent"></div>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                <div className="w-1 h-6 bg-gradient-to-b from-pink-500 to-transparent"></div>
-              </div>
+          {/* Decorative Elements */}
+          <div className="hidden lg:block space-y-4">
+            <div className="flex gap-4">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl rotate-12 opacity-60"></div>
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl -rotate-6 opacity-40 mt-4"></div>
+            </div>
+            <div className="flex gap-4 justify-center lg:justify-start">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg rotate-45 opacity-30"></div>
+              <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-3xl -rotate-12 opacity-50 -mt-2"></div>
             </div>
           </div>
         </div>
 
         {/* Login Section */}
-        <div className="w-full max-w-lg mx-auto">
-          <Card className="backdrop-blur-xl bg-white/95 border-0 shadow-2xl shadow-blue-500/5 rounded-3xl">
-            <CardContent className="p-10">
-              <div className="mb-10 text-center">
-                <div className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full px-6 py-3 mb-6">
-                  <Sparkles className="w-5 h-5 text-white" />
-                  <span className="font-semibold text-white">Seu Post</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Gestão completa de redes sociais</h3>
-                <p className="text-gray-600">Entre na sua conta para começar</p>
+        <div className="w-full max-w-md mx-auto">
+          <Card className="backdrop-blur-xl bg-white/90 border-0 shadow-2xl shadow-blue-500/10">
+            <CardContent className="p-8">
+              <div className="mb-8 text-center">
+                <p className="text-gray-600 text-lg">Acesse sua conta</p>
               </div>
 
               <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-gray-50 p-1 rounded-2xl mb-8">
+                <TabsList className="grid w-full grid-cols-2 bg-gray-50 p-1 rounded-xl">
                   <TabsTrigger 
                     value="login" 
-                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-xl font-medium py-3"
+                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium"
                   >
                     Login
                   </TabsTrigger>
                   <TabsTrigger 
                     value="register" 
-                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-xl font-medium py-3"
+                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium"
                   >
                     Cadastrar
                   </TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="login">
-                  <form onSubmit={handleLogin} className="space-y-8">
-                    <div className="space-y-3">
-                      <Label htmlFor="username" className="text-gray-700 font-medium text-base">
+                <TabsContent value="login" className="mt-8">
+                  <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="username" className="text-gray-700 font-medium">
                         Usuário
                       </Label>
                       <Input 
                         id="username" 
                         placeholder="Digite seu usuário" 
-                        className="h-14 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-blue-500/20 text-base" 
+                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
                         required 
                       />
                     </div>
 
-                    <div className="space-y-3">
-                      <Label htmlFor="password" className="text-gray-700 font-medium text-base">
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-gray-700 font-medium">
                         Senha
                       </Label>
                       <div className="relative">
@@ -136,7 +124,7 @@ const Index = () => {
                           id="password" 
                           type={showPassword ? "text" : "password"} 
                           placeholder="Digite sua senha" 
-                          className="h-14 pr-12 border-gray-200 rounded-2xl focus:border-blue-500 focus:ring-blue-500/20 text-base" 
+                          className="h-12 pr-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
                           required 
                         />
                         <button 
@@ -150,20 +138,20 @@ const Index = () => {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2">
                         <Checkbox 
                           id="remember" 
                           checked={rememberMe} 
                           onCheckedChange={handleRememberMeChange} 
                         />
-                        <Label htmlFor="remember" className="text-gray-600">
+                        <Label htmlFor="remember" className="text-sm text-gray-600">
                           Lembrar de mim
                         </Label>
                       </div>
                       <button 
                         type="button" 
                         onClick={handleForgotPassword} 
-                        className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                        className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
                       >
                         Esqueci a senha
                       </button>
@@ -171,14 +159,14 @@ const Index = () => {
 
                     <Button 
                       type="submit" 
-                      className="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 text-base"
+                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                     >
                       Entrar
                     </Button>
                   </form>
                 </TabsContent>
 
-                <TabsContent value="register">
+                <TabsContent value="register" className="mt-8">
                   <form className="space-y-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-gray-700 font-medium">

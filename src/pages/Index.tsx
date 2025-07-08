@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -256,15 +255,6 @@ const Index = () => {
                   </div>
                 </Card>
               </div>
-            </div>
-
-            {/* Bottom CTA */}
-            <div className="bg-gradient-to-r from-[#0077FF] to-[#0066DD] rounded-2xl p-6 text-white">
-              <h4 className="text-lg font-bold mb-2">Pronto para começar?</h4>
-              <p className="text-blue-100 text-sm mb-4">Crie sua conta gratuita e comece a gerenciar suas redes sociais hoje mesmo.</p>
-              <Button className="bg-white text-[#0077FF] hover:bg-gray-100 font-medium">
-                Começar Agora
-              </Button>
             </div>
           </div>
         </div>

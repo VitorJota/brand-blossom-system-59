@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,7 +56,7 @@ const Index = () => {
             
             <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl">
               Planeje, agende, publique e acompanhe seus posts no Instagram e LinkedIn. 
-              Com um toque a mais: nossa IA é capaz de criar textos e imagens por você.
+              <span className="text-[#0077ff] font-medium"> Com um toque a mais: nossa IA é capaz de criar textos e imagens por você.</span>
             </p>
           </div>
 

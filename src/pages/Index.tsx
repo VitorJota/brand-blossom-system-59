@@ -29,6 +29,10 @@ const Index = () => {
     });
   };
 
+  const handleRememberMeChange = (checked: boolean | "indeterminate") => {
+    setRememberMe(checked === true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8">
@@ -96,7 +100,7 @@ const Index = () => {
                     <Checkbox 
                       id="remember" 
                       checked={rememberMe}
-                      onCheckedChange={setRememberMe}
+                      onCheckedChange={handleRememberMeChange}
                     />
                     <Label htmlFor="remember" className="text-sm text-gray-600">
                       Lembrar de mim

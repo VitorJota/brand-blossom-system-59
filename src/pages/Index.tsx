@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,33 +7,29 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Sparkles, Instagram, Linkedin } from "lucide-react";
-
 const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
       title: "Login realizado com sucesso!",
-      description: "Redirecionando para o dashboard...",
+      description: "Redirecionando para o dashboard..."
     });
   };
-
   const handleForgotPassword = () => {
     toast({
       title: "Email enviado!",
-      description: "Verifique sua caixa de entrada para redefinir sua senha.",
+      description: "Verifique sua caixa de entrada para redefinir sua senha."
     });
   };
-
   const handleRememberMeChange = (checked: boolean | "indeterminate") => {
     setRememberMe(checked === true);
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+  return <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center min-h-screen">
           {/* Login Section */}
@@ -64,12 +58,7 @@ const Index = () => {
                       <div className="space-y-2">
                         <Label htmlFor="username" className="text-gray-700 font-medium">Usuário</Label>
                         <div className="relative">
-                          <Input 
-                            id="username" 
-                            placeholder="Digite seu usuário" 
-                            className="pl-10 h-12 border-gray-200 focus:border-[#0077FF] focus:ring-[#0077FF]"
-                            required
-                          />
+                          <Input id="username" placeholder="Digite seu usuário" className="pl-10 h-12 border-gray-200 focus:border-[#0077FF] focus:ring-[#0077FF]" required />
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                             <div className="w-5 h-5 text-gray-400">👤</div>
                           </div>
@@ -79,21 +68,11 @@ const Index = () => {
                       <div className="space-y-2">
                         <Label htmlFor="password" className="text-gray-700 font-medium">Senha</Label>
                         <div className="relative">
-                          <Input 
-                            id="password" 
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Digite sua senha" 
-                            className="pl-10 pr-10 h-12 border-gray-200 focus:border-[#0077FF] focus:ring-[#0077FF]"
-                            required
-                          />
+                          <Input id="password" type={showPassword ? "text" : "password"} placeholder="Digite sua senha" className="pl-10 pr-10 h-12 border-gray-200 focus:border-[#0077FF] focus:ring-[#0077FF]" required />
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                             <div className="w-5 h-5 text-gray-400">🔒</div>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                          >
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
                         </div>
@@ -101,20 +80,12 @@ const Index = () => {
 
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
-                          <Checkbox 
-                            id="remember" 
-                            checked={rememberMe}
-                            onCheckedChange={handleRememberMeChange}
-                          />
+                          <Checkbox id="remember" checked={rememberMe} onCheckedChange={handleRememberMeChange} />
                           <Label htmlFor="remember" className="text-sm text-gray-600">
                             Lembrar de mim
                           </Label>
                         </div>
-                        <button
-                          type="button"
-                          onClick={handleForgotPassword}
-                          className="text-[#0077FF] hover:text-[#0066DD] text-sm font-medium"
-                        >
+                        <button type="button" onClick={handleForgotPassword} className="text-[#0077FF] hover:text-[#0066DD] text-sm font-medium">
                           Esqueci a senha
                         </button>
                       </div>
@@ -155,10 +126,7 @@ const Index = () => {
           {/* Hero Section */}
           <div className="lg:pl-12">
             <div className="mb-8">
-              <div className="inline-flex items-center gap-2 bg-[#0077FF]/10 text-[#0077FF] px-4 py-2 rounded-full text-sm font-medium mb-6 border border-[#0077FF]/20">
-                <Sparkles className="w-4 h-4" />
-                GESTÃO COMPLETA DE REDES SOCIAIS
-              </div>
+              
               
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                 Gerencie suas redes sociais de forma profissional.<br />
@@ -187,11 +155,7 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 rounded-xl mb-4 overflow-hidden">
-                      <img 
-                        src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop" 
-                        alt="Post preview" 
-                        className="w-full h-full object-cover"
-                      />
+                      <img src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop" alt="Post preview" className="w-full h-full object-cover" />
                     </div>
                     <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                       🚀 Alcançamos um novo marco! Obrigado por fazer parte desta jornada incrível...
@@ -214,11 +178,7 @@ const Index = () => {
                       </div>
                     </div>
                     <div className="aspect-square bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl mb-4 overflow-hidden">
-                      <img 
-                        src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop" 
-                        alt="Post preview" 
-                        className="w-full h-full object-cover"
-                      />
+                      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop" alt="Post preview" className="w-full h-full object-cover" />
                     </div>
                     <p className="text-sm text-gray-600 line-clamp-2 mb-3">
                       💼 Transformação digital: Como nossa empresa evoluiu nos últimos meses...
@@ -235,9 +195,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
-

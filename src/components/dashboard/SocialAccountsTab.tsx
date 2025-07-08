@@ -1,12 +1,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, CheckCircle, XCircle, RefreshCw, Trash2, Instagram, Linkedin } from "lucide-react";
+import { Plus, CheckCircle, XCircle, RefreshCw, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSocialAccounts } from "@/hooks/useSocialAccounts";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { InstagramLogo } from "@/components/icons/InstagramLogo";
+import { LinkedInLogo } from "@/components/icons/LinkedInLogo";
 
 export const SocialAccountsTab = () => {
   const { accounts, loading, connectInstagram, connectLinkedIn, disconnectAccount, syncAccount } = useSocialAccounts();
@@ -15,8 +17,8 @@ export const SocialAccountsTab = () => {
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
-      case "instagram": return <Instagram className="w-5 h-5" />;
-      case "linkedin": return <Linkedin className="w-5 h-5" />;
+      case "instagram": return <InstagramLogo className="w-5 h-5" />;
+      case "linkedin": return <LinkedInLogo className="w-5 h-5" />;
       default: return null;
     }
   };
@@ -81,7 +83,7 @@ export const SocialAccountsTab = () => {
                   className="flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                   size="lg"
                 >
-                  <Instagram className="w-5 h-5" />
+                  <InstagramLogo className="w-5 h-5" />
                   <span className="font-medium">Conectar Instagram</span>
                 </Button>
                 
@@ -90,7 +92,7 @@ export const SocialAccountsTab = () => {
                   className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
                   size="lg"
                 >
-                  <Linkedin className="w-5 h-5" />
+                  <LinkedInLogo className="w-5 h-5" />
                   <span className="font-medium">Conectar LinkedIn</span>
                 </Button>
               </div>
@@ -120,7 +122,7 @@ export const SocialAccountsTab = () => {
                     size="sm"
                     disabled={accounts.some(acc => acc.platform === 'instagram')}
                   >
-                    <Instagram className="w-4 h-4" />
+                    <InstagramLogo className="w-4 h-4" />
                     Instagram
                   </Button>
                   <Button 
@@ -129,7 +131,7 @@ export const SocialAccountsTab = () => {
                     size="sm"
                     disabled={accounts.some(acc => acc.platform === 'linkedin')}
                   >
-                    <Linkedin className="w-4 h-4" />
+                    <LinkedInLogo className="w-4 h-4" />
                     LinkedIn
                   </Button>
                 </div>

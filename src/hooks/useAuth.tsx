@@ -29,20 +29,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Atualizar last_login_at quando o usuário faz login
+        // Atualizar perfil quando o usuário faz login
         if (event === 'SIGNED_IN' && session?.user) {
           setTimeout(async () => {
             try {
+              // Atualizar apenas campos que existem nos tipos atuais
               await supabase
                 .from('profiles')
                 .update({ 
-                  last_login_at: new Date().toISOString(),
-                  login_attempts: 0,
-                  locked_until: null
+                  updated_at: new Date().toISOString()
                 })
                 .eq('id', session.user.id);
             } catch (error) {
-              console.error('Error updating login timestamp:', error);
+              console.error('Error updating profile:', error);
             }
           }, 0);
         }
@@ -67,31 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
       
       if (error) {
-        // Incrementar tentativas de login em caso de erro
-        setTimeout(async () => {
-          try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('login_attempts')
-              .eq('email', email)
-              .single();
-            
-            if (profile) {
-              const attempts = (profile.login_attempts || 0) + 1;
-              const shouldLock = attempts >= 5;
-              
-              await supabase
-                .from('profiles')
-                .update({
-                  login_attempts: attempts,
-                  locked_until: shouldLock ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null
-                })
-                .eq('email', email);
-            }
-          } catch (updateError) {
-            console.error('Error updating login attempts:', updateError);
-          }
-        }, 0);
+        console.error('Sign in error:', error);
       }
       
       return { error };

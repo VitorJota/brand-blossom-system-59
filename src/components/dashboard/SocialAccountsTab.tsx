@@ -217,26 +217,6 @@ export const SocialAccountsTab = () => {
           </div>
         </div>
       )}
-
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-blue-600 text-sm font-medium">ℹ</span>
-            </div>
-            <div className="text-sm">
-              <p className="font-medium text-blue-900 mb-1">Configuração necessária</p>
-              <p className="text-blue-700">
-                Para usar as integrações reais do Instagram e LinkedIn, você precisa configurar as credenciais OAuth nas variáveis de ambiente do Supabase:
-              </p>
-              <ul className="list-disc list-inside mt-2 text-blue-700 space-y-1">
-                <li>INSTAGRAM_CLIENT_ID e INSTAGRAM_CLIENT_SECRET</li>
-                <li>LINKEDIN_CLIENT_ID e LINKEDIN_CLIENT_SECRET</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

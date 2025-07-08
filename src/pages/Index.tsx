@@ -141,7 +141,7 @@ const Index = () => {
 
             {/* Posts Preview */}
             <div className="mb-8">
-              <p className="text-lg text-gray-600 mb-4 italic">Seu conteúdo pode ganhar vida com organização e tecnologia.</p>
+              
               <h3 className="text-xl font-bold text-gray-900 mb-6">Seus posts em ação</h3>
               
               <div className="grid grid-cols-2 gap-4">

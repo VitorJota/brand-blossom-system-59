@@ -1,169 +1,137 @@
 
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, BarChart3, Users, Zap, ArrowRight } from "lucide-react";
+
 const Index = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const {
-    toast
-  } = useToast();
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Login realizado com sucesso!",
-      description: "Redirecionando para o dashboard..."
-    });
-  };
-  const handleForgotPassword = () => {
-    toast({
-      title: "Email enviado!",
-      description: "Verifique sua caixa de entrada para redefinir sua senha."
-    });
-  };
-  const handleRememberMeChange = (checked: boolean | "indeterminate") => {
-    setRememberMe(checked === true);
-  };
-  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
-        
-        {/* Hero Section */}
-        <div className="space-y-8 text-center lg:text-left">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-semibold text-gray-800">Seu Post</span>
-            </div>
-            
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              Gerencie suas redes sociais de forma{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-gray-900">
-                profissional.
-              </span>
-            </h1>
-            
-            <h2 className="text-xl lg:text-2xl font-medium text-[#0077ff]">
-              Com ou sem inteligência artificial – você escolhe.
-            </h2>
-            
-            <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl">
-              Planeje, agende, publique e acompanhe seus posts no Instagram e LinkedIn. 
-              <span className="text-[#0077ff] font-medium"> Com um toque a mais: nossa IA é capaz de criar textos e imagens por você.</span>
-            </p>
-          </div>
+  const { user } = useAuth();
 
-          {/* Decorative Elements */}
-          <div className="hidden lg:block space-y-4">
-            <div className="flex gap-4">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl rotate-12 opacity-60"></div>
-              <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-xl -rotate-6 opacity-40 mt-4"></div>
-            </div>
-            <div className="flex gap-4 justify-center lg:justify-start">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg rotate-45 opacity-30"></div>
-              <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-3xl -rotate-12 opacity-50 -mt-2"></div>
-            </div>
-          </div>
+  const features = [
+    {
+      icon: Calendar,
+      title: "Agendamento Inteligente",
+      description: "Programe seus posts para o melhor horário em todas as redes sociais"
+    },
+    {
+      icon: BarChart3,
+      title: "Analytics Avançados",
+      description: "Acompanhe o desempenho com métricas detalhadas e insights"
+    },
+    {
+      icon: Users,
+      title: "Gestão de Equipes",
+      description: "Colabore com sua equipe com roles e permissões granulares"
+    },
+    {
+      icon: Zap,
+      title: "Alta Performance",
+      description: "Arquitetura otimizada para escalar com milhares de usuários"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Header */}
+      <header className="container mx-auto px-4 py-6 flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Social Media Manager</h1>
+        <div className="space-x-4">
+          {user ? (
+            <Button asChild>
+              <Link to="/dashboard">
+                Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/auth">Entrar</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/auth">Começar Agora</Link>
+              </Button>
+            </>
+          )}
         </div>
+      </header>
 
-        {/* Login Section */}
-        <div className="w-full max-w-md mx-auto">
-          <Card className="backdrop-blur-xl bg-white/90 border-0 shadow-2xl shadow-blue-500/10">
-            <CardContent className="p-8">
-              <div className="mb-8 text-center">
-                <p className="text-gray-600 text-lg">Acesse sua conta</p>
-              </div>
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-20 text-center">
+        <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          Gerencie suas redes sociais
+          <br />
+          <span className="text-blue-600">de forma inteligente</span>
+        </h1>
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          Plataforma completa para agendamento, análises e gestão de conteúdo 
+          em todas as suas redes sociais. Construída para alta performance e escala.
+        </p>
+        <div className="space-x-4">
+          <Button size="lg" asChild>
+            <Link to="/auth">
+              Começar Gratuitamente <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+          <Button size="lg" variant="outline">
+            Ver Demo
+          </Button>
+        </div>
+      </section>
 
-              <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-gray-50 p-1 rounded-xl">
-                  <TabsTrigger value="login" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium">
-                    Login
-                  </TabsTrigger>
-                  <TabsTrigger value="register" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium">
-                    Cadastrar
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="login" className="mt-8">
-                  <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="username" className="text-gray-700 font-medium">
-                        Usuário
-                      </Label>
-                      <Input id="username" placeholder="Digite seu usuário" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-700 font-medium">
-                        Senha
-                      </Label>
-                      <div className="relative">
-                        <Input id="password" type={showPassword ? "text" : "password"} placeholder="Digite sua senha" className="h-12 pr-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="remember" checked={rememberMe} onCheckedChange={handleRememberMeChange} />
-                        <Label htmlFor="remember" className="text-sm text-gray-600">
-                          Lembrar de mim
-                        </Label>
-                      </div>
-                      <button type="button" onClick={handleForgotPassword} className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
-                        Esqueci a senha
-                      </button>
-                    </div>
-
-                    <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
-                      Entrar
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                <TabsContent value="register" className="mt-8">
-                  <form className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-700 font-medium">
-                        Nome Completo
-                      </Label>
-                      <Input id="name" placeholder="Digite seu nome completo" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700 font-medium">
-                        Email
-                      </Label>
-                      <Input id="email" type="email" placeholder="Digite seu email" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="new-password" className="text-gray-700 font-medium">
-                        Senha
-                      </Label>
-                      <Input id="new-password" type="password" placeholder="Crie uma senha segura" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
-                    </div>
-
-                    <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
-                      Criar Conta
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+      {/* Features Section */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Tudo que você precisa em uma plataforma
+          </h2>
+          <p className="text-lg text-gray-600">
+            Recursos profissionais para impulsionar sua presença digital
+          </p>
         </div>
         
-      </div>
-    </div>;
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <CardTitle>{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>{feature.description}</CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-blue-600 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Pronto para começar?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Junte-se a milhares de criadores e empresas que confiam em nossa plataforma
+          </p>
+          <Button size="lg" variant="secondary" asChild>
+            <Link to="/auth">
+              Criar Conta Gratuita <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-400">
+            © 2024 Social Media Manager. Construído com alta performance e segurança.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
 };
+
 export default Index;

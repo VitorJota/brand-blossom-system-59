@@ -11,11 +11,11 @@ interface SocialAccount {
   id: string;
   platform: string;
   username: string;
-  display_name: string | null;
-  profile_picture_url: string | null;
+  display_name?: string | null;
+  profile_picture_url?: string | null;
   is_active: boolean;
   connected_at: string;
-  last_sync_at: string | null;
+  last_sync_at?: string | null;
 }
 
 interface SocialAccountCardProps {

@@ -73,6 +73,14 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
     }
   };
 
+  if (members.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        <p>Nenhum membro encontrado na organização.</p>
+      </div>
+    );
+  }
+
   return (
     <Table>
       <TableHeader>
@@ -85,20 +93,38 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
       </TableHeader>
       <TableBody>
         {members.map((member) => (
-          <TableRow key={member.id}>
+          <TableRow 
+            key={member.id} 
+            className={member.role === 'owner' ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200' : ''}
+          >
             <TableCell>
-              <div>
-                <div className="font-medium">
-                  {member.profiles.first_name && member.profiles.last_name
-                    ? `${member.profiles.first_name} ${member.profiles.last_name}`
-                    : member.profiles.email
-                  }
+              <div className="flex items-center gap-2">
+                <div>
+                  <div className="font-medium flex items-center gap-2">
+                    {member.role === 'owner' && <Crown className="h-4 w-4 text-yellow-600" />}
+                    {member.profiles.first_name && member.profiles.last_name
+                      ? `${member.profiles.first_name} ${member.profiles.last_name}`
+                      : member.profiles.email
+                    }
+                    {member.role === 'owner' && (
+                      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-medium">
+                        Criador da Conta
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500">{member.profiles.email}</div>
                 </div>
-                <div className="text-sm text-gray-500">{member.profiles.email}</div>
               </div>
             </TableCell>
             <TableCell>
-              <Badge variant="outline" className="flex items-center gap-1 w-fit">
+              <Badge 
+                variant="outline" 
+                className={`flex items-center gap-1 w-fit ${
+                  member.role === 'owner' 
+                    ? 'border-yellow-300 bg-yellow-50 text-yellow-800' 
+                    : ''
+                }`}
+              >
                 {roleIcons[member.role]}
                 {roleLabels[member.role]}
               </Badge>
@@ -117,6 +143,9 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                )}
+                {member.role === 'owner' && (
+                  <span className="text-xs text-gray-400">Não removível</span>
                 )}
               </TableCell>
             )}

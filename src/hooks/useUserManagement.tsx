@@ -44,15 +44,27 @@ export const useUserManagement = () => {
     try {
       setLoading(true);
 
-      // Buscar organização do usuário
+      console.log('Fetching user organization data for user:', user.id);
+
+      // Buscar organização do usuário usando maybeSingle() para evitar erro se não encontrar
       const { data: orgData, error: orgError } = await supabase
         .from('organization_members')
         .select('organization_id, role')
         .eq('user_id', user?.id)
-        .single();
+        .maybeSingle();
 
-      if (orgError) throw orgError;
+      if (orgError) {
+        console.error('Error fetching organization:', orgError);
+        throw orgError;
+      }
 
+      if (!orgData) {
+        console.log('User is not part of any organization');
+        setLoading(false);
+        return;
+      }
+
+      console.log('User organization data:', orgData);
       setCurrentUserRole(orgData.role);
       setOrganizationId(orgData.organization_id);
 
@@ -66,9 +78,15 @@ export const useUserManagement = () => {
           joined_at,
           profiles!organization_members_user_id_fkey (email, first_name, last_name)
         `)
-        .eq('organization_id', orgData.organization_id);
+        .eq('organization_id', orgData.organization_id)
+        .order('joined_at', { ascending: true });
 
-      if (membersError) throw membersError;
+      if (membersError) {
+        console.error('Error fetching members:', membersError);
+        throw membersError;
+      }
+
+      console.log('Members data:', membersData);
       setMembers(membersData || []);
 
       // Buscar convites pendentes
@@ -78,7 +96,12 @@ export const useUserManagement = () => {
         .eq('organization_id', orgData.organization_id)
         .is('accepted_at', null);
 
-      if (invitesError) throw invitesError;
+      if (invitesError) {
+        console.error('Error fetching invitations:', invitesError);
+        throw invitesError;
+      }
+
+      console.log('Invitations data:', invitesData);
       setInvitations(invitesData || []);
 
     } catch (error) {

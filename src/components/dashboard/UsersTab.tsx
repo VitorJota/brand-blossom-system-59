@@ -85,7 +85,7 @@ export const UsersTab = () => {
       setCurrentUserRole(orgData.role);
       setOrganizationId(orgData.organization_id);
 
-      // Buscar membros da organização
+      // Buscar membros da organização com join correto
       const { data: membersData, error: membersError } = await supabase
         .from('organization_members')
         .select(`
@@ -93,7 +93,7 @@ export const UsersTab = () => {
           user_id,
           role,
           joined_at,
-          profiles:user_id (email, first_name, last_name)
+          profiles!organization_members_user_id_fkey (email, first_name, last_name)
         `)
         .eq('organization_id', orgData.organization_id);
 

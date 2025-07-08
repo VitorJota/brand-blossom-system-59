@@ -9,31 +9,56 @@ import { ProfileTab } from "./ProfileTab";
 export const DashboardTabs = () => {
   return (
     <Tabs defaultValue="posts" className="w-full">
-      <TabsList className="grid w-full grid-cols-5">
-        <TabsTrigger value="posts">Posts</TabsTrigger>
-        <TabsTrigger value="social">Contas</TabsTrigger>
-        <TabsTrigger value="templates">Templates</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        <TabsTrigger value="profile">Perfil</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-5 bg-gray-50/80 backdrop-blur-sm p-2 rounded-xl border border-gray-200/50">
+        <TabsTrigger 
+          value="posts" 
+          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+        >
+          Posts
+        </TabsTrigger>
+        <TabsTrigger 
+          value="social" 
+          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+        >
+          Contas
+        </TabsTrigger>
+        <TabsTrigger 
+          value="templates" 
+          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+        >
+          Templates
+        </TabsTrigger>
+        <TabsTrigger 
+          value="analytics" 
+          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+        >
+          Analytics
+        </TabsTrigger>
+        <TabsTrigger 
+          value="profile" 
+          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
+        >
+          Perfil
+        </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="posts" className="mt-6">
+      <TabsContent value="posts" className="mt-8 px-8 pb-8">
         <PostsTab />
       </TabsContent>
       
-      <TabsContent value="social" className="mt-6">
+      <TabsContent value="social" className="mt-8 px-8 pb-8">
         <SocialAccountsTab />
       </TabsContent>
       
-      <TabsContent value="templates" className="mt-6">
+      <TabsContent value="templates" className="mt-8 px-8 pb-8">
         <TemplatesTab />
       </TabsContent>
       
-      <TabsContent value="analytics" className="mt-6">
+      <TabsContent value="analytics" className="mt-8 px-8 pb-8">
         <AnalyticsTab />
       </TabsContent>
       
-      <TabsContent value="profile" className="mt-6">
+      <TabsContent value="profile" className="mt-8 px-8 pb-8">
         <ProfileTab />
       </TabsContent>
     </Tabs>

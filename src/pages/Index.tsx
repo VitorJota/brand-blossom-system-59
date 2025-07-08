@@ -44,7 +44,7 @@ const Index = () => {
             
             <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Gerencie suas redes sociais de forma{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-gray-900">
                 profissional.
               </span>
             </h1>

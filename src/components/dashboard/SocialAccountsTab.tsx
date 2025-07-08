@@ -62,114 +62,157 @@ export const SocialAccountsTab = () => {
           <h2 className="text-2xl font-bold">Contas Sociais</h2>
           <p className="text-gray-600">Gerencie suas contas do Instagram e LinkedIn</p>
         </div>
-        
-        <div className="flex gap-2">
-          <Button 
-            onClick={() => handleConnect('instagram')}
-            className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-            disabled={accounts.some(acc => acc.platform === 'instagram')}
-          >
-            <Instagram className="w-4 h-4" />
-            Instagram
-          </Button>
-          <Button 
-            onClick={() => handleConnect('linkedin')}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            disabled={accounts.some(acc => acc.platform === 'linkedin')}
-          >
-            <Linkedin className="w-4 h-4" />
-            LinkedIn
-          </Button>
-        </div>
       </div>
 
       {accounts.length === 0 ? (
         <Card className="p-8 text-center">
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-6">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
               <Plus className="w-8 h-8 text-gray-400" />
             </div>
             <div>
-              <h3 className="text-lg font-medium text-gray-900">Nenhuma conta conectada</h3>
-              <p className="text-gray-600">Conecte suas contas do Instagram e LinkedIn para começar</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhuma conta conectada</h3>
+              <p className="text-gray-600 mb-6">Conecte suas contas do Instagram e LinkedIn para começar</p>
+              
+              {/* Botões de conexão centralizados */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  onClick={() => handleConnect('instagram')}
+                  className="flex items-center gap-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  size="lg"
+                >
+                  <Instagram className="w-5 h-5" />
+                  <span className="font-medium">Conectar Instagram</span>
+                </Button>
+                
+                <Button 
+                  onClick={() => handleConnect('linkedin')}
+                  className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  size="lg"
+                >
+                  <Linkedin className="w-5 h-5" />
+                  <span className="font-medium">Conectar LinkedIn</span>
+                </Button>
+              </div>
             </div>
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {accounts.map((account) => (
-            <Card key={account.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg ${getPlatformColor(account.platform)} flex items-center justify-center text-white`}>
-                      {getPlatformIcon(account.platform)}
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg capitalize">{account.platform}</CardTitle>
-                      <p className="text-sm text-gray-600">@{account.username}</p>
-                    </div>
-                  </div>
-                  {account.is_active ? (
-                    <CheckCircle className="w-5 h-5 text-green-500" />
-                  ) : (
-                    <XCircle className="w-5 h-5 text-red-500" />
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
+        <div className="space-y-4">
+          {/* Botões para adicionar mais contas */}
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={account.profile_picture_url} />
-                    <AvatarFallback>{account.display_name?.charAt(0) || account.username.charAt(0).toUpperCase()}</AvatarFallback>
-                  </Avatar>
+                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Plus className="w-5 h-5 text-blue-600" />
+                  </div>
                   <div>
-                    <p className="font-medium">{account.display_name || account.username}</p>
-                    <p className="text-sm text-gray-600">Conta conectada</p>
+                    <h4 className="font-medium text-gray-900">Adicionar mais contas</h4>
+                    <p className="text-sm text-gray-600">Conecte outras redes sociais</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span>Conectada em:</span>
-                  <span>{new Date(account.connected_at).toLocaleDateString('pt-BR')}</span>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => handleConnect('instagram')}
+                    className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                    size="sm"
+                    disabled={accounts.some(acc => acc.platform === 'instagram')}
+                  >
+                    <Instagram className="w-4 h-4" />
+                    Instagram
+                  </Button>
+                  <Button 
+                    onClick={() => handleConnect('linkedin')}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                    disabled={accounts.some(acc => acc.platform === 'linkedin')}
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    LinkedIn
+                  </Button>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                {account.last_sync_at && (
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>Última sincronização:</span>
-                    <span>{new Date(account.last_sync_at).toLocaleDateString('pt-BR')}</span>
+          {/* Contas conectadas */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {accounts.map((account) => (
+              <Card key={account.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg ${getPlatformColor(account.platform)} flex items-center justify-center text-white`}>
+                        {getPlatformIcon(account.platform)}
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg capitalize">{account.platform}</CardTitle>
+                        <p className="text-sm text-gray-600">@{account.username}</p>
+                      </div>
+                    </div>
+                    {account.is_active ? (
+                      <CheckCircle className="w-5 h-5 text-green-500" />
+                    ) : (
+                      <XCircle className="w-5 h-5 text-red-500" />
+                    )}
                   </div>
-                )}
-                
-                <div className="flex items-center gap-2">
-                  <Badge variant={account.is_active ? "default" : "secondary"}>
-                    {account.is_active ? "Ativa" : "Inativa"}
-                  </Badge>
-                </div>
-                
-                <div className="flex justify-between pt-2 gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex items-center gap-1"
-                    onClick={() => syncAccount(account.id)}
-                  >
-                    <RefreshCw className="w-3 h-3" />
-                    Sincronizar
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:border-red-200"
-                    onClick={() => disconnectAccount(account.id)}
-                  >
-                    <Trash2 className="w-3 h-3" />
-                    Desconectar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={account.profile_picture_url} />
+                      <AvatarFallback>{account.display_name?.charAt(0) || account.username.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{account.display_name || account.username}</p>
+                      <p className="text-sm text-gray-600">Conta conectada</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>Conectada em:</span>
+                    <span>{new Date(account.connected_at).toLocaleDateString('pt-BR')}</span>
+                  </div>
+
+                  {account.last_sync_at && (
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <span>Última sincronização:</span>
+                      <span>{new Date(account.last_sync_at).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-2">
+                    <Badge variant={account.is_active ? "default" : "secondary"}>
+                      {account.is_active ? "Ativa" : "Inativa"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="flex justify-between pt-2 gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1"
+                      onClick={() => syncAccount(account.id)}
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      Sincronizar
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1 text-red-600 hover:text-red-700 hover:border-red-200"
+                      onClick={() => disconnectAccount(account.id)}
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      Desconectar
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       )}
 

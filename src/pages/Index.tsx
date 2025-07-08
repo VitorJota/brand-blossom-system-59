@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Sparkles, Clock, DollarSign, TrendingUp, Instagram, Linkedin, BarChart3, Calendar, Target, Wand2 } from "lucide-react";
+import { Eye, EyeOff, Sparkles, Instagram, Linkedin } from "lucide-react";
 
 const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -46,7 +47,7 @@ const Index = () => {
                 </div>
                 <span className="text-2xl font-bold text-gray-900">Seu Post</span>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Bem-vindo de volta</h1>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Gestão completa de redes sociais</h1>
               <p className="text-gray-600">Faça login para gerenciar suas redes sociais</p>
             </div>
 
@@ -170,41 +171,6 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Features */}
-            <div className="grid grid-cols-2 gap-6 mb-12">
-              <div className="text-center group">
-                <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
-                  <Calendar className="w-7 h-7 text-[#0077FF]" />
-                </div>
-                <p className="text-sm font-semibold text-gray-900">Agendamento</p>
-                <p className="text-sm text-gray-600">Inteligente</p>
-              </div>
-              
-              <div className="text-center group">
-                <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
-                  <BarChart3 className="w-7 h-7 text-[#0077FF]" />
-                </div>
-                <p className="text-sm font-semibold text-gray-900">Métricas</p>
-                <p className="text-sm text-gray-600">Detalhadas</p>
-              </div>
-              
-              <div className="text-center group">
-                <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
-                  <Target className="w-7 h-7 text-[#0077FF]" />
-                </div>
-                <p className="text-sm font-semibold text-gray-900">Gestão</p>
-                <p className="text-sm text-gray-600">Profissional</p>
-              </div>
-
-              <div className="text-center group">
-                <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
-                  <Wand2 className="w-7 h-7 text-[#0077FF]" />
-                </div>
-                <p className="text-sm font-semibold text-gray-900">Criação por IA</p>
-                <p className="text-sm text-gray-600">(em breve)</p>
-              </div>
-            </div>
-
             {/* Posts Preview */}
             <div className="mb-8">
               <p className="text-lg text-gray-600 mb-4 italic">Seu conteúdo pode ganhar vida com organização e tecnologia.</p>
@@ -274,3 +240,4 @@ const Index = () => {
 };
 
 export default Index;
+

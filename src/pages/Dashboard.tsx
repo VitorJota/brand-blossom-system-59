@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/hooks/useAuth";
 import { Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -31,6 +32,14 @@ const Dashboard = () => {
       title: "Gestão de usuários",
       description: "Redirecionando para a gestão de usuários."
     });
+  };
+
+  // Função para garantir que apenas abas válidas do menu principal sejam selecionadas
+  const handleTabChange = (tab: string) => {
+    const validMainTabs = ["posts", "social", "templates", "analytics"];
+    if (validMainTabs.includes(tab)) {
+      setActiveTab(tab);
+    }
   };
 
   return (
@@ -83,7 +92,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Container principal com glassmorphism */}
         <div className="backdrop-blur-xl bg-white/80 rounded-2xl shadow-2xl shadow-blue-500/10 border border-white/20 overflow-hidden">
-          <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
+          <DashboardTabs activeTab={activeTab} onTabChange={handleTabChange} />
         </div>
 
         {/* Elementos decorativos de fundo */}

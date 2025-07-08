@@ -15,7 +15,7 @@ interface DashboardTabsProps {
 export const DashboardTabs = ({ activeTab, onTabChange }: DashboardTabsProps) => {
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="grid w-full grid-cols-6 bg-gray-50/80 backdrop-blur-sm p-2 rounded-xl border border-gray-200/50">
+      <TabsList className="grid w-full grid-cols-4 bg-gray-50/80 backdrop-blur-sm p-2 rounded-xl border border-gray-200/50">
         <TabsTrigger 
           value="posts" 
           className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
@@ -39,18 +39,6 @@ export const DashboardTabs = ({ activeTab, onTabChange }: DashboardTabsProps) =>
           className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
         >
           Analytics
-        </TabsTrigger>
-        <TabsTrigger 
-          value="users" 
-          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
-        >
-          Usuários
-        </TabsTrigger>
-        <TabsTrigger 
-          value="profile" 
-          className="data-[state=active]:bg-white data-[state=active]:text-[#0077ff] data-[state=active]:shadow-lg data-[state=active]:border data-[state=active]:border-[#0077ff]/20 rounded-lg font-medium transition-all duration-200 hover:bg-white/50"
-        >
-          Perfil
         </TabsTrigger>
       </TabsList>
       

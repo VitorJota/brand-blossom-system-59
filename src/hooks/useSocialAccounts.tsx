@@ -34,7 +34,22 @@ export const useSocialAccounts = () => {
         .order('connected_at', { ascending: false });
 
       if (error) throw error;
-      setAccounts(data || []);
+      
+      // Transformar os dados para o formato esperado
+      const transformedAccounts: SocialAccount[] = (data || []).map(account => ({
+        id: account.id,
+        platform: account.platform as 'instagram' | 'linkedin',
+        account_id: account.account_id,
+        username: account.username,
+        display_name: account.display_name || undefined,
+        profile_picture_url: account.profile_picture_url || undefined,
+        followers_count: account.followers_count || 0,
+        is_active: account.is_active || false,
+        connected_at: account.connected_at || '',
+        last_sync_at: account.last_sync_at || undefined,
+      }));
+
+      setAccounts(transformedAccounts);
     } catch (error: any) {
       console.error('Error fetching social accounts:', error);
       toast({

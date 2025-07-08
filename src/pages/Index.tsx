@@ -1,28 +1,18 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { RegisterForm } from "@/components/auth/RegisterForm";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 const Index = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [registerData, setRegisterData] = useState({ 
-    name: "", 
-    email: "", 
-    password: "" 
-  });
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { signIn, signInWithGoogle, signUp, resetPassword, user } = useAuth();
+  const { resetPassword, user } = useAuth();
   const navigate = useNavigate();
 
   // Redirecionar usuários autenticados
@@ -32,167 +22,8 @@ const Index = () => {
     }
   }, [user, navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const { error } = await signIn(loginData.email, loginData.password);
-      
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          toast({
-            title: "Erro de autenticação",
-            description: "Email ou senha incorretos. Verifique suas credenciais.",
-            variant: "destructive"
-          });
-        } else if (error.message.includes('Email not confirmed')) {
-          toast({
-            title: "Email não confirmado",
-            description: "Verifique seu email e clique no link de confirmação.",
-            variant: "destructive"
-          });
-        } else if (error.message.includes('Too many requests')) {
-          toast({
-            title: "Muitas tentativas",
-            description: "Aguarde alguns minutos antes de tentar novamente.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Erro no login",
-            description: error.message || "Ocorreu um erro inesperado.",
-            variant: "destructive"
-          });
-        }
-      } else {
-        toast({
-          title: "Login realizado com sucesso!",
-          description: "Redirecionando para o dashboard..."
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Erro no login",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    console.log('🎯 Botão do Google clicado');
-    setIsLoading(true);
-    
-    try {
-      // Verificar configurações do ambiente
-      console.log('🔧 Verificando configurações...');
-      console.log('🌍 Environment:', {
-        origin: window.location.origin,
-        href: window.location.href,
-        userAgent: navigator.userAgent.substring(0, 100)
-      });
-      
-      const { error } = await signInWithGoogle();
-      
-      if (error) {
-        console.error('🚨 Erro retornado do signInWithGoogle:', error);
-        
-        // Mensagens de erro mais específicas e úteis
-        let errorMessage = "Erro no login com Google.";
-        
-        if (error.message?.includes('Popup bloqueado')) {
-          errorMessage = "Popup foi bloqueado pelo navegador. Permita popups para este site e tente novamente.";
-        } else if (error.message?.includes('conexão')) {
-          errorMessage = "Problema de conexão. Verifique sua internet e tente novamente.";
-        } else if (error.message?.includes('configuração')) {
-          errorMessage = "Erro de configuração do Google OAuth. Entre em contato com o suporte.";
-        } else if (error.message?.includes('refused') || error.message?.includes('recusada')) {
-          errorMessage = "Conexão recusada pelo Google. Verifique se:\n• Você tem conexão com a internet\n• O site está configurado corretamente\n• Tente em outro navegador";
-        }
-        
-        toast({
-          title: "Erro no login com Google",
-          description: errorMessage,
-          variant: "destructive"
-        });
-      } else {
-        console.log('✅ Login com Google iniciado com sucesso');
-        toast({
-          title: "Redirecionando...",
-          description: "Você será redirecionado para completar o login com Google."
-        });
-      }
-    } catch (error) {
-      console.error('💥 Erro não capturado no handleGoogleLogin:', error);
-      toast({
-        title: "Erro no login com Google",
-        description: "Ocorreu um erro inesperado. Tente novamente ou use o login com email.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const names = registerData.name.split(' ');
-      const firstName = names[0] || '';
-      const lastName = names.slice(1).join(' ') || '';
-
-      const { error } = await signUp(
-        registerData.email, 
-        registerData.password,
-        firstName,
-        lastName
-      );
-      
-      if (error) {
-        if (error.message.includes('Password should be at least')) {
-          toast({
-            title: "Senha muito fraca",
-            description: "A senha deve ter pelo menos 6 caracteres.",
-            variant: "destructive"
-          });
-        } else if (error.message.includes('User already registered')) {
-          toast({
-            title: "Email já cadastrado",
-            description: "Este email já está em uso. Tente fazer login.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Erro no cadastro",
-            description: error.message || "Ocorreu um erro inesperado.",
-            variant: "destructive"
-          });
-        }
-      } else {
-        toast({
-          title: "Cadastro realizado!",
-          description: "Verifique seu email para confirmar a conta."
-        });
-        setRegisterData({ name: "", email: "", password: "" });
-      }
-    } catch (error) {
-      toast({
-        title: "Erro no cadastro",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async () => {
-    if (!loginData.email) {
+  const handleForgotPassword = async (email: string) => {
+    if (!email) {
       toast({
         title: "Email necessário",
         description: "Digite seu email no campo acima para redefinir a senha.",
@@ -201,9 +32,8 @@ const Index = () => {
       return;
     }
 
-    setIsLoading(true);
     try {
-      const { error } = await resetPassword(loginData.email);
+      const { error } = await resetPassword(email);
       
       if (error) {
         toast({
@@ -223,20 +53,14 @@ const Index = () => {
         description: "Ocorreu um erro inesperado. Tente novamente.",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
-
-  const handleRememberMeChange = (checked: boolean | "indeterminate") => {
-    setRememberMe(checked === true);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         
-        {/* Hero Section - mantido exatamente igual */}
+        {/* Hero Section */}
         <div className="space-y-8 text-center lg:text-left">
           <div className="space-y-6">
             <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
@@ -263,7 +87,7 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Decorative Elements - mantidos exatamente iguais */}
+          {/* Decorative Elements */}
           <div className="hidden lg:block space-y-4">
             <div className="flex gap-4">
               <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl rotate-12 opacity-60"></div>
@@ -276,7 +100,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Login Section - com melhor tratamento de erros */}
+        {/* Login Section */}
         <div className="w-full max-w-md mx-auto">
           <Card className="backdrop-blur-xl bg-white/90 border-0 shadow-2xl shadow-blue-500/10">
             <CardContent className="p-8">
@@ -295,30 +119,8 @@ const Index = () => {
                 </TabsList>
                 
                 <TabsContent value="login" className="mt-8">
-                  {/* Botão do Google - com melhor feedback */}
                   <div className="space-y-4 mb-6">
-                    <Button 
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      variant="outline"
-                      className="w-full h-12 border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200"
-                      disabled={isLoading}
-                    >
-                      <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                      </svg>
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                          Conectando...
-                        </div>
-                      ) : (
-                        "Continuar com Google"
-                      )}
-                    </Button>
+                    <GoogleButton text="Continuar com Google" />
                     
                     <div className="relative">
                       <div className="absolute inset-0 flex items-center">
@@ -330,113 +132,12 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="username" className="text-gray-700 font-medium">
-                        Email
-                      </Label>
-                      <Input 
-                        id="username" 
-                        type="email"
-                        placeholder="Digite seu email" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        value={loginData.email}
-                        onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
-                        disabled={isLoading}
-                        required 
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-700 font-medium">
-                        Senha
-                      </Label>
-                      <div className="relative">
-                        <Input 
-                          id="password" 
-                          type={showPassword ? "text" : "password"} 
-                          placeholder="Digite sua senha" 
-                          className="h-12 pr-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                          value={loginData.password}
-                          onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
-                          disabled={isLoading}
-                          required 
-                        />
-                        <button 
-                          type="button" 
-                          onClick={() => setShowPassword(!showPassword)} 
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                          disabled={isLoading}
-                        >
-                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="remember" 
-                          checked={rememberMe} 
-                          onCheckedChange={handleRememberMeChange}
-                          disabled={isLoading}
-                        />
-                        <Label htmlFor="remember" className="text-sm text-gray-600">
-                          Lembrar de mim
-                        </Label>
-                      </div>
-                      <button 
-                        type="button" 
-                        onClick={handleForgotPassword} 
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                        disabled={isLoading}
-                      >
-                        Esqueci a senha
-                      </button>
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          Entrando...
-                        </div>
-                      ) : (
-                        "Entrar"
-                      )}
-                    </Button>
-                  </form>
+                  <LoginForm onForgotPassword={handleForgotPassword} />
                 </TabsContent>
 
                 <TabsContent value="register" className="mt-8">
-                  {/* Botão do Google também no cadastro com melhor feedback */}
                   <div className="space-y-4 mb-6">
-                    <Button 
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      variant="outline"
-                      className="w-full h-12 border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200"
-                      disabled={isLoading}
-                    >
-                      <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                      </svg>
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                          Conectando...
-                        </div>
-                      ) : (
-                        "Cadastrar com Google"
-                      )}
-                    </Button>
+                    <GoogleButton text="Cadastrar com Google" />
                     
                     <div className="relative">
                       <div className="absolute inset-0 flex items-center">
@@ -448,69 +149,7 @@ const Index = () => {
                     </div>
                   </div>
 
-                  <form onSubmit={handleRegister} className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-gray-700 font-medium">
-                        Nome Completo
-                      </Label>
-                      <Input 
-                        id="name" 
-                        placeholder="Digite seu nome completo" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        value={registerData.name}
-                        onChange={(e) => setRegisterData(prev => ({ ...prev, name: e.target.value }))}
-                        disabled={isLoading}
-                        required 
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700 font-medium">
-                        Email
-                      </Label>
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="Digite seu email" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        value={registerData.email}
-                        onChange={(e) => setRegisterData(prev => ({ ...prev, email: e.target.value }))}
-                        disabled={isLoading}
-                        required 
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="new-password" className="text-gray-700 font-medium">
-                        Senha
-                      </Label>
-                      <Input 
-                        id="new-password" 
-                        type="password" 
-                        placeholder="Crie uma senha segura" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        value={registerData.password}
-                        onChange={(e) => setRegisterData(prev => ({ ...prev, password: e.target.value }))}
-                        disabled={isLoading}
-                        required 
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          Criando conta...
-                        </div>
-                      ) : (
-                        "Criar Conta"
-                      )}
-                    </Button>
-                  </form>
+                  <RegisterForm />
                 </TabsContent>
               </Tabs>
             </CardContent>

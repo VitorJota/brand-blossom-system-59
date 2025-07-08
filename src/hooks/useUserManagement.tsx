@@ -1,0 +1,109 @@
+
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type UserRole = Database["public"]["Enums"]["user_role"];
+
+interface OrganizationMember {
+  id: string;
+  user_id: string;
+  role: UserRole;
+  joined_at: string;
+  profiles: {
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+  };
+}
+
+interface Invitation {
+  id: string;
+  email: string;
+  role: UserRole;
+  created_at: string;
+  expires_at: string;
+}
+
+export const useUserManagement = () => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [members, setMembers] = useState<OrganizationMember[]>([]);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [currentUserRole, setCurrentUserRole] = useState<UserRole | null>(null);
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
+
+  const canManageUsers = currentUserRole === 'owner' || currentUserRole === 'admin';
+
+  const fetchUserData = async () => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+
+      // Buscar organização do usuário
+      const { data: orgData, error: orgError } = await supabase
+        .from('organization_members')
+        .select('organization_id, role')
+        .eq('user_id', user?.id)
+        .single();
+
+      if (orgError) throw orgError;
+
+      setCurrentUserRole(orgData.role);
+      setOrganizationId(orgData.organization_id);
+
+      // Buscar membros da organização
+      const { data: membersData, error: membersError } = await supabase
+        .from('organization_members')
+        .select(`
+          id,
+          user_id,
+          role,
+          joined_at,
+          profiles!organization_members_user_id_fkey (email, first_name, last_name)
+        `)
+        .eq('organization_id', orgData.organization_id);
+
+      if (membersError) throw membersError;
+      setMembers(membersData || []);
+
+      // Buscar convites pendentes
+      const { data: invitesData, error: invitesError } = await supabase
+        .from('user_invitations')
+        .select('id, email, role, created_at, expires_at')
+        .eq('organization_id', orgData.organization_id)
+        .is('accepted_at', null);
+
+      if (invitesError) throw invitesError;
+      setInvitations(invitesData || []);
+
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao carregar dados dos usuários.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user]);
+
+  return {
+    loading,
+    members,
+    invitations,
+    currentUserRole,
+    organizationId,
+    canManageUsers,
+    refetchData: fetchUserData
+  };
+};

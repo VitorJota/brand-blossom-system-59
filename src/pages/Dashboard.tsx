@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/hooks/useAuth";
 import { Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -27,9 +26,10 @@ const Dashboard = () => {
   };
 
   const handleNavigateToUsers = () => {
+    setActiveTab("users");
     toast({
-      title: "Em desenvolvimento", 
-      description: "A gestão de usuários será implementada em breve."
+      title: "Gestão de usuários",
+      description: "Redirecionando para a gestão de usuários."
     });
   };
 

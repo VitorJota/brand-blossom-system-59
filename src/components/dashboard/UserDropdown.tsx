@@ -84,14 +84,14 @@ export const UserDropdown = ({ onNavigateToProfile, onNavigateToBilling, onNavig
           <span>Meu Perfil</span>
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={onNavigateToBilling} className="cursor-pointer">
-          <CreditCard className="mr-2 h-4 w-4" />
-          <span>Cobranças</span>
-        </DropdownMenuItem>
-        
         <DropdownMenuItem onClick={onNavigateToUsers} className="cursor-pointer">
           <Users className="mr-2 h-4 w-4" />
           <span>Usuários</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem onClick={onNavigateToBilling} className="cursor-pointer">
+          <CreditCard className="mr-2 h-4 w-4" />
+          <span>Cobranças</span>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />

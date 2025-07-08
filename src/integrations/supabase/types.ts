@@ -425,11 +425,66 @@ export type Database = {
           },
         ]
       }
+      user_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          invited_by: string | null
+          organization_id: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          token: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          invited_by?: string | null
+          organization_id?: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          token?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          invited_by?: string | null
+          organization_id?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_invitations_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      accept_invitation: {
+        Args: { invitation_token: string }
+        Returns: Json
+      }
       get_user_organizations: {
         Args: { user_uuid: string }
         Returns: string[]
@@ -448,7 +503,13 @@ export type Database = {
       organization_plan: "free" | "pro" | "enterprise"
       post_status: "draft" | "scheduled" | "published" | "failed"
       social_platform: "instagram" | "linkedin" | "facebook" | "twitter"
-      user_role: "owner" | "admin" | "manager" | "editor" | "viewer"
+      user_role:
+        | "owner"
+        | "admin"
+        | "manager"
+        | "editor"
+        | "viewer"
+        | "social_media"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -580,7 +641,14 @@ export const Constants = {
       organization_plan: ["free", "pro", "enterprise"],
       post_status: ["draft", "scheduled", "published", "failed"],
       social_platform: ["instagram", "linkedin", "facebook", "twitter"],
-      user_role: ["owner", "admin", "manager", "editor", "viewer"],
+      user_role: [
+        "owner",
+        "admin",
+        "manager",
+        "editor",
+        "viewer",
+        "social_media",
+      ],
     },
   },
 } as const

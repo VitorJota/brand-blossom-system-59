@@ -29,13 +29,13 @@ export const useSocialAccounts = () => {
       const { data, error } = await supabase
         .from('social_accounts')
         .select('id, platform, account_id, username, display_name, profile_picture_url, is_active, connected_at, last_sync_at')
-        .eq('user_id', user.id)
+        .eq('connected_by', user.id)
         .order('connected_at', { ascending: false });
 
       if (error) throw error;
       
-      // Transformar os dados para o formato esperado
-      const transformedAccounts: SocialAccount[] = (data || []).map(account => ({
+      // Transform the data to match our interface
+      const transformedAccounts = (data || []).map((account): SocialAccount => ({
         id: account.id,
         platform: account.platform as 'instagram' | 'linkedin',
         account_id: account.account_id,
@@ -109,7 +109,7 @@ export const useSocialAccounts = () => {
         .from('social_accounts')
         .delete()
         .eq('id', accountId)
-        .eq('user_id', user?.id);
+        .eq('connected_by', user?.id);
 
       if (error) throw error;
 
@@ -136,7 +136,7 @@ export const useSocialAccounts = () => {
         .from('social_accounts')
         .update({ last_sync_at: new Date().toISOString() })
         .eq('id', accountId)
-        .eq('user_id', user?.id);
+        .eq('connected_by', user?.id);
 
       if (error) throw error;
 

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Sparkles, Clock, DollarSign, TrendingUp, Instagram, Linkedin, BarChart3, Calendar, Target } from "lucide-react";
+import { Eye, EyeOff, Sparkles, Clock, DollarSign, TrendingUp, Instagram, Linkedin, BarChart3, Calendar, Target, Wand2 } from "lucide-react";
 
 const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -160,17 +161,17 @@ const Index = () => {
               
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                 Gerencie suas redes sociais de forma profissional.<br />
-                <span className="text-[#0077FF]">Com ou sem inteligência artificial.</span>
+                <span className="text-[#0077FF]">Com ou sem inteligência artificial – você escolhe.</span>
               </h2>
               
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Planeje, agende, publique e acompanhe o desempenho dos seus posts no Instagram e LinkedIn. 
-                <strong className="text-[#0077FF]"> Opcionalmente, deixe a IA criar conteúdo para você.</strong>
+                Planeje, agende, publique e acompanhe seus posts no Instagram e LinkedIn.
+                <strong className="text-[#0077FF]"> Com um toque a mais: nossa IA é capaz de criar textos e imagens por você.</strong>
               </p>
             </div>
 
             {/* Features */}
-            <div className="grid grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-2 gap-6 mb-12">
               <div className="text-center group">
                 <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
                   <Calendar className="w-7 h-7 text-[#0077FF]" />
@@ -194,10 +195,19 @@ const Index = () => {
                 <p className="text-sm font-semibold text-gray-900">Gestão</p>
                 <p className="text-sm text-gray-600">Profissional</p>
               </div>
+
+              <div className="text-center group">
+                <div className="w-14 h-14 bg-[#0077FF]/10 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0077FF]/20 transition-colors">
+                  <Wand2 className="w-7 h-7 text-[#0077FF]" />
+                </div>
+                <p className="text-sm font-semibold text-gray-900">Criação por IA</p>
+                <p className="text-sm text-gray-600">(em breve)</p>
+              </div>
             </div>
 
             {/* Posts Preview */}
             <div className="mb-8">
+              <p className="text-lg text-gray-600 mb-4 italic">Seu conteúdo pode ganhar vida com organização e tecnologia.</p>
               <h3 className="text-xl font-bold text-gray-900 mb-6">Seus posts em ação</h3>
               
               <div className="grid grid-cols-2 gap-4">

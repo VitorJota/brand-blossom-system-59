@@ -125,7 +125,7 @@ export const SocialAccountsTab = () => {
                   </Avatar>
                   <div>
                     <p className="font-medium">{account.display_name || account.username}</p>
-                    <p className="text-sm text-gray-600">{account.followers_count} seguidores</p>
+                    <p className="text-sm text-gray-600">Conta conectada</p>
                   </div>
                 </div>
                 

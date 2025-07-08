@@ -11,7 +11,6 @@ export interface SocialAccount {
   username: string;
   display_name?: string;
   profile_picture_url?: string;
-  followers_count: number;
   is_active: boolean;
   connected_at: string;
   last_sync_at?: string;
@@ -29,7 +28,7 @@ export const useSocialAccounts = () => {
     try {
       const { data, error } = await supabase
         .from('social_accounts')
-        .select('*')
+        .select('id, platform, account_id, username, display_name, profile_picture_url, is_active, connected_at, last_sync_at')
         .eq('user_id', user.id)
         .order('connected_at', { ascending: false });
 
@@ -43,7 +42,6 @@ export const useSocialAccounts = () => {
         username: account.username,
         display_name: account.display_name || undefined,
         profile_picture_url: account.profile_picture_url || undefined,
-        followers_count: account.followers_count || 0,
         is_active: account.is_active || false,
         connected_at: account.connected_at || '',
         last_sync_at: account.last_sync_at || undefined,

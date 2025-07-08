@@ -6,9 +6,14 @@ import { TemplatesTab } from "./TemplatesTab";
 import { AnalyticsTab } from "./AnalyticsTab";
 import { ProfileTab } from "./ProfileTab";
 
-export const DashboardTabs = () => {
+interface DashboardTabsProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+export const DashboardTabs = ({ activeTab, onTabChange }: DashboardTabsProps) => {
   return (
-    <Tabs defaultValue="posts" className="w-full">
+    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
       <TabsList className="grid w-full grid-cols-5 bg-gray-50/80 backdrop-blur-sm p-2 rounded-xl border border-gray-200/50">
         <TabsTrigger 
           value="posts" 

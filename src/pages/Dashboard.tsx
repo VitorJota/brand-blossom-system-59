@@ -1,28 +1,36 @@
 
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { LogOut, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardTabs } from "@/components/dashboard/DashboardTabs";
+import { UserDropdown } from "@/components/dashboard/UserDropdown";
+import { useState } from "react";
 
 const Dashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("posts");
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Logout realizado",
-        description: "Você foi desconectado com sucesso."
-      });
-    } catch (error) {
-      toast({
-        title: "Erro no logout",
-        description: "Ocorreu um erro ao fazer logout.",
-        variant: "destructive"
-      });
-    }
+  const handleNavigateToProfile = () => {
+    setActiveTab("profile");
+    toast({
+      title: "Navegando para perfil",
+      description: "Redirecionando para suas configurações de perfil."
+    });
+  };
+
+  const handleNavigateToBilling = () => {
+    toast({
+      title: "Em desenvolvimento",
+      description: "A seção de cobranças será implementada em breve."
+    });
+  };
+
+  const handleNavigateToUsers = () => {
+    toast({
+      title: "Em desenvolvimento", 
+      description: "A gestão de usuários será implementada em breve."
+    });
   };
 
   return (
@@ -60,22 +68,12 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* User info e logout */}
-              <div className="flex items-center gap-4">
-                <div className="hidden md:block text-right">
-                  <p className="text-sm text-gray-600">Bem-vindo,</p>
-                  <p className="font-medium text-gray-900">{user?.email}</p>
-                </div>
-                
-                <Button
-                  onClick={handleSignOut}
-                  variant="outline"
-                  className="bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white/90 transition-all duration-200 shadow-md"
-                >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sair
-                </Button>
-              </div>
+              {/* User Dropdown */}
+              <UserDropdown 
+                onNavigateToProfile={handleNavigateToProfile}
+                onNavigateToBilling={handleNavigateToBilling}
+                onNavigateToUsers={handleNavigateToUsers}
+              />
             </div>
           </div>
         </div>
@@ -85,7 +83,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Container principal com glassmorphism */}
         <div className="backdrop-blur-xl bg-white/80 rounded-2xl shadow-2xl shadow-blue-500/10 border border-white/20 overflow-hidden">
-          <DashboardTabs />
+          <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
         {/* Elementos decorativos de fundo */}

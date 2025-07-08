@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-
 const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
@@ -21,20 +20,16 @@ const Index = () => {
       description: "Redirecionando para o dashboard..."
     });
   };
-
   const handleForgotPassword = () => {
     toast({
       title: "Email enviado!",
       description: "Verifique sua caixa de entrada para redefinir sua senha."
     });
   };
-
   const handleRememberMeChange = (checked: boolean | "indeterminate") => {
     setRememberMe(checked === true);
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
+  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
         
         {/* Hero Section */}
@@ -54,7 +49,7 @@ const Index = () => {
               </span>
             </h1>
             
-            <h2 className="text-xl lg:text-2xl text-gray-700 font-medium">
+            <h2 className="text-xl lg:text-2xl font-medium text-[#0077ff]">
               Com ou sem inteligência artificial – você escolhe.
             </h2>
             
@@ -87,16 +82,10 @@ const Index = () => {
 
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-gray-50 p-1 rounded-xl">
-                  <TabsTrigger 
-                    value="login" 
-                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium"
-                  >
+                  <TabsTrigger value="login" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium">
                     Login
                   </TabsTrigger>
-                  <TabsTrigger 
-                    value="register" 
-                    className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium"
-                  >
+                  <TabsTrigger value="register" className="data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm rounded-lg font-medium">
                     Cadastrar
                   </TabsTrigger>
                 </TabsList>
@@ -107,12 +96,7 @@ const Index = () => {
                       <Label htmlFor="username" className="text-gray-700 font-medium">
                         Usuário
                       </Label>
-                      <Input 
-                        id="username" 
-                        placeholder="Digite seu usuário" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        required 
-                      />
+                      <Input id="username" placeholder="Digite seu usuário" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
                     </div>
 
                     <div className="space-y-2">
@@ -120,18 +104,8 @@ const Index = () => {
                         Senha
                       </Label>
                       <div className="relative">
-                        <Input 
-                          id="password" 
-                          type={showPassword ? "text" : "password"} 
-                          placeholder="Digite sua senha" 
-                          className="h-12 pr-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                          required 
-                        />
-                        <button 
-                          type="button" 
-                          onClick={() => setShowPassword(!showPassword)} 
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
+                        <Input id="password" type={showPassword ? "text" : "password"} placeholder="Digite sua senha" className="h-12 pr-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                           {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                         </button>
                       </div>
@@ -139,28 +113,17 @@ const Index = () => {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Checkbox 
-                          id="remember" 
-                          checked={rememberMe} 
-                          onCheckedChange={handleRememberMeChange} 
-                        />
+                        <Checkbox id="remember" checked={rememberMe} onCheckedChange={handleRememberMeChange} />
                         <Label htmlFor="remember" className="text-sm text-gray-600">
                           Lembrar de mim
                         </Label>
                       </div>
-                      <button 
-                        type="button" 
-                        onClick={handleForgotPassword} 
-                        className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                      >
+                      <button type="button" onClick={handleForgotPassword} className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
                         Esqueci a senha
                       </button>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                    >
+                    <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
                       Entrar
                     </Button>
                   </form>
@@ -172,44 +135,24 @@ const Index = () => {
                       <Label htmlFor="name" className="text-gray-700 font-medium">
                         Nome Completo
                       </Label>
-                      <Input 
-                        id="name" 
-                        placeholder="Digite seu nome completo" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        required 
-                      />
+                      <Input id="name" placeholder="Digite seu nome completo" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
                     </div>
                     
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-gray-700 font-medium">
                         Email
                       </Label>
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="Digite seu email" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        required 
-                      />
+                      <Input id="email" type="email" placeholder="Digite seu email" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="new-password" className="text-gray-700 font-medium">
                         Senha
                       </Label>
-                      <Input 
-                        id="new-password" 
-                        type="password" 
-                        placeholder="Crie uma senha segura" 
-                        className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" 
-                        required 
-                      />
+                      <Input id="new-password" type="password" placeholder="Crie uma senha segura" className="h-12 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20" required />
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                    >
+                    <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
                       Criar Conta
                     </Button>
                   </form>
@@ -220,8 +163,6 @@ const Index = () => {
         </div>
         
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;

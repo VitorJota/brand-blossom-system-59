@@ -2,27 +2,25 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Crown, Shield, Users, Monitor } from "lucide-react";
+import { Trash2, Crown, Shield, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type UserRole = Database["public"]["Enums"]["user_role"];
+type AppRole = Database["public"]["Enums"]["app_role"];
 
-interface OrganizationMember {
+interface Member {
   id: string;
   user_id: string;
-  role: UserRole;
-  joined_at: string;
-  profiles: {
-    email: string;
-    first_name: string | null;
-    last_name: string | null;
-  };
+  first_name: string | null;
+  last_name: string | null;
+  role: AppRole;
+  avatar_url: string | null;
+  created_at: string;
 }
 
 interface MembersTableProps {
-  members: OrganizationMember[];
+  members: Member[];
   canManageUsers: boolean;
   currentUserId?: string;
   onMemberRemoved: () => void;
@@ -31,28 +29,22 @@ interface MembersTableProps {
 export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberRemoved }: MembersTableProps) => {
   const { toast } = useToast();
 
-  const roleLabels: Record<UserRole, string> = {
-    owner: "Master",
+  const roleLabels: Record<AppRole, string> = {
+    owner: "Proprietário",
     admin: "Administrador", 
-    manager: "Gerente",
-    editor: "Editor",
-    viewer: "Visualizador",
-    social_media: "Social Media"
+    member: "Membro"
   };
 
-  const roleIcons: Record<UserRole, React.ReactNode> = {
+  const roleIcons: Record<AppRole, React.ReactNode> = {
     owner: <Crown className="h-4 w-4 text-yellow-600" />,
     admin: <Shield className="h-4 w-4 text-red-600" />,
-    manager: <Users className="h-4 w-4 text-blue-600" />,
-    editor: <Monitor className="h-4 w-4 text-green-600" />,
-    viewer: <Monitor className="h-4 w-4 text-gray-600" />,
-    social_media: <Monitor className="h-4 w-4 text-purple-600" />
+    member: <Users className="h-4 w-4 text-blue-600" />
   };
 
   const handleRemoveMember = async (memberId: string) => {
     try {
       const { error } = await supabase
-        .from('organization_members')
+        .from('user_roles')
         .delete()
         .eq('id', memberId);
 
@@ -102,9 +94,9 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
                 <div>
                   <div className="font-medium flex items-center gap-2">
                     {member.role === 'owner' && <Crown className="h-4 w-4 text-yellow-600" />}
-                    {member.profiles.first_name && member.profiles.last_name
-                      ? `${member.profiles.first_name} ${member.profiles.last_name}`
-                      : member.profiles.email
+                    {member.first_name && member.last_name
+                      ? `${member.first_name} ${member.last_name}`
+                      : 'Usuário'
                     }
                     {member.role === 'owner' && (
                       <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-medium">
@@ -112,7 +104,6 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
                       </span>
                     )}
                   </div>
-                  <div className="text-sm text-gray-500">{member.profiles.email}</div>
                 </div>
               </div>
             </TableCell>
@@ -130,7 +121,7 @@ export const MembersTable = ({ members, canManageUsers, currentUserId, onMemberR
               </Badge>
             </TableCell>
             <TableCell>
-              {new Date(member.joined_at).toLocaleDateString('pt-BR')}
+              {new Date(member.created_at).toLocaleDateString('pt-BR')}
             </TableCell>
             {canManageUsers && (
               <TableCell>

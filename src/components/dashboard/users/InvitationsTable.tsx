@@ -2,17 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Crown, Shield, Users, Monitor } from "lucide-react";
+import { Trash2, Crown, Shield, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type UserRole = Database["public"]["Enums"]["user_role"];
+type AppRole = Database["public"]["Enums"]["app_role"];
 
 interface Invitation {
   id: string;
   email: string;
-  role: UserRole;
+  role: AppRole;
   created_at: string;
   expires_at: string;
 }
@@ -26,28 +26,22 @@ interface InvitationsTableProps {
 export const InvitationsTable = ({ invitations, canManageUsers, onInvitationCanceled }: InvitationsTableProps) => {
   const { toast } = useToast();
 
-  const roleLabels: Record<UserRole, string> = {
-    owner: "Master",
+  const roleLabels: Record<AppRole, string> = {
+    owner: "Proprietário",
     admin: "Administrador", 
-    manager: "Gerente",
-    editor: "Editor",
-    viewer: "Visualizador",
-    social_media: "Social Media"
+    member: "Membro"
   };
 
-  const roleIcons: Record<UserRole, React.ReactNode> = {
+  const roleIcons: Record<AppRole, React.ReactNode> = {
     owner: <Crown className="h-4 w-4 text-yellow-600" />,
     admin: <Shield className="h-4 w-4 text-red-600" />,
-    manager: <Users className="h-4 w-4 text-blue-600" />,
-    editor: <Monitor className="h-4 w-4 text-green-600" />,
-    viewer: <Monitor className="h-4 w-4 text-gray-600" />,
-    social_media: <Monitor className="h-4 w-4 text-purple-600" />
+    member: <Users className="h-4 w-4 text-blue-600" />
   };
 
   const handleCancelInvitation = async (invitationId: string) => {
     try {
       const { error } = await supabase
-        .from('user_invitations')
+        .from('invitations')
         .delete()
         .eq('id', invitationId);
 
@@ -67,6 +61,14 @@ export const InvitationsTable = ({ invitations, canManageUsers, onInvitationCanc
       });
     }
   };
+
+  if (invitations.length === 0) {
+    return (
+      <div className="text-center py-8 text-gray-500">
+        <p>Nenhum convite pendente.</p>
+      </div>
+    );
+  }
 
   return (
     <Table>

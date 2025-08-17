@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type UserRole = Database["public"]["Enums"]["user_role"];
+type AppRole = Database["public"]["Enums"]["app_role"];
 
 interface UserInviteDialogProps {
   organizationId: string;
@@ -22,7 +22,7 @@ export const UserInviteDialog = ({ organizationId, canManageUsers, onInviteSent 
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>("social_media");
+  const [role, setRole] = useState<AppRole>("member");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInvite = async () => {
@@ -31,7 +31,7 @@ export const UserInviteDialog = ({ organizationId, canManageUsers, onInviteSent 
     setIsLoading(true);
     try {
       const { error } = await supabase
-        .from('user_invitations')
+        .from('invitations')
         .insert({
           organization_id: organizationId,
           email: email,
@@ -47,7 +47,7 @@ export const UserInviteDialog = ({ organizationId, canManageUsers, onInviteSent 
       });
 
       setEmail("");
-      setRole("social_media");
+      setRole("member");
       setIsOpen(false);
       onInviteSent();
     } catch (error: any) {
@@ -92,14 +92,13 @@ export const UserInviteDialog = ({ organizationId, canManageUsers, onInviteSent 
           </div>
           <div>
             <Label htmlFor="role">Função</Label>
-            <Select value={role} onValueChange={(value: UserRole) => setRole(value)} disabled={isLoading}>
+            <Select value={role} onValueChange={(value: AppRole) => setRole(value)} disabled={isLoading}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="admin">Administrador</SelectItem>
-                <SelectItem value="manager">Gerente</SelectItem>
-                <SelectItem value="social_media">Social Media</SelectItem>
+                <SelectItem value="member">Membro</SelectItem>
               </SelectContent>
             </Select>
           </div>

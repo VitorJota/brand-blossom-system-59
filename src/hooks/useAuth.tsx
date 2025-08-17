@@ -33,15 +33,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (event === 'SIGNED_IN' && session?.user) {
           setTimeout(async () => {
             try {
-              // Atualizar apenas campos que existem nos tipos atuais
-              await supabase
+              // Criar perfil se não existir
+              const { data: existingProfile } = await supabase
                 .from('profiles')
-                .update({ 
-                  updated_at: new Date().toISOString()
-                })
-                .eq('id', session.user.id);
+                .select('id')
+                .eq('user_id', session.user.id)
+                .single();
+
+              if (!existingProfile) {
+                await supabase
+                  .from('profiles')
+                  .insert({ 
+                    user_id: session.user.id,
+                    first_name: session.user.user_metadata?.first_name || null,
+                    last_name: session.user.user_metadata?.last_name || null
+                  });
+              }
             } catch (error) {
-              console.error('Error updating profile:', error);
+              console.error('Error creating/updating profile:', error);
             }
           }, 0);
         }

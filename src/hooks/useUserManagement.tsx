@@ -5,24 +5,34 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type UserRole = Database["public"]["Enums"]["user_role"];
+type AppRole = Database["public"]["Enums"]["app_role"];
 
-interface OrganizationMember {
+interface UserProfile {
   id: string;
   user_id: string;
-  role: UserRole;
-  joined_at: string;
-  profiles: {
-    email: string;
-    first_name: string | null;
-    last_name: string | null;
-  };
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface UserRole {
+  id: string;
+  user_id: string;
+  organization_id: string;
+  role: AppRole;
+  created_at: string;
+}
+
+interface Member extends UserProfile {
+  role: AppRole;
 }
 
 interface Invitation {
   id: string;
   email: string;
-  role: UserRole;
+  role: AppRole;
   created_at: string;
   expires_at: string;
 }
@@ -31,9 +41,9 @@ export const useUserManagement = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-  const [members, setMembers] = useState<OrganizationMember[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [currentUserRole, setCurrentUserRole] = useState<UserRole | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<AppRole | null>(null);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
 
   const canManageUsers = currentUserRole === 'owner' || currentUserRole === 'admin';
@@ -42,13 +52,13 @@ export const useUserManagement = () => {
     if (!user) return null;
 
     try {
-      console.log('Creating organization for existing user:', user.id);
+      console.log('Creating organization for user:', user.id);
 
       // Buscar dados do perfil do usuário
       const { data: profileData } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .single();
 
       if (!profileData) {
@@ -58,7 +68,7 @@ export const useUserManagement = () => {
       // Criar nome da organização
       const userName = profileData.first_name && profileData.last_name
         ? `${profileData.first_name} ${profileData.last_name}`.trim()
-        : profileData.email.split('@')[0];
+        : user.email?.split('@')[0] || 'User';
 
       const orgName = `${userName}'s Organization`;
       const orgSlug = `${userName.toLowerCase().replace(/\s+/g, '-')}-${user.id.substring(0, 8)}`;
@@ -76,15 +86,15 @@ export const useUserManagement = () => {
       if (orgError) throw orgError;
 
       // Adicionar usuário como owner
-      const { error: memberError } = await supabase
-        .from('organization_members')
+      const { error: roleError } = await supabase
+        .from('user_roles')
         .insert({
           organization_id: orgData.id,
           user_id: user.id,
           role: 'owner'
         });
 
-      if (memberError) throw memberError;
+      if (roleError) throw roleError;
 
       console.log('Organization created successfully:', orgData.id);
       return orgData.id;
@@ -109,22 +119,22 @@ export const useUserManagement = () => {
       console.log('Fetching user organization data for user:', user.id);
 
       // Buscar organização do usuário
-      const { data: orgData, error: orgError } = await supabase
-        .from('organization_members')
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
         .select('organization_id, role')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .maybeSingle();
 
-      if (orgError) {
-        console.error('Error fetching organization:', orgError);
-        throw orgError;
+      if (roleError) {
+        console.error('Error fetching user role:', roleError);
+        throw roleError;
       }
 
-      let currentOrgId = orgData?.organization_id;
-      let currentRole = orgData?.role;
+      let currentOrgId = roleData?.organization_id;
+      let currentRole = roleData?.role;
 
       // Se o usuário não faz parte de nenhuma organização, criar uma
-      if (!orgData) {
+      if (!roleData) {
         console.log('User is not part of any organization, creating one...');
         currentOrgId = await createUserOrganization();
         currentRole = 'owner';
@@ -139,38 +149,44 @@ export const useUserManagement = () => {
       setCurrentUserRole(currentRole);
       setOrganizationId(currentOrgId);
 
-      // Buscar membros da organização
-      const { data: membersData, error: membersError } = await supabase
-        .from('organization_members')
-        .select(`
-          id,
-          user_id,
-          role,
-          joined_at,
-          profiles!organization_members_user_id_fkey (email, first_name, last_name)
-        `)
-        .eq('organization_id', currentOrgId)
-        .order('joined_at', { ascending: true });
+      // Buscar todos os roles da organização
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role')
+        .eq('organization_id', currentOrgId);
 
-      if (membersError) {
-        console.error('Error fetching members:', membersError);
-        throw membersError;
+      if (rolesError) throw rolesError;
+
+      // Buscar perfis de todos os usuários
+      const userIds = roles?.map(r => r.user_id) || [];
+      if (userIds.length > 0) {
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('*')
+          .in('user_id', userIds);
+
+        if (profilesError) throw profilesError;
+
+        // Combinar perfis com roles
+        const membersWithRoles = profiles?.map(profile => {
+          const userRole = roles?.find(r => r.user_id === profile.user_id);
+          return {
+            ...profile,
+            role: userRole?.role || 'member' as AppRole
+          };
+        }) || [];
+
+        setMembers(membersWithRoles);
       }
-
-      console.log('Members data:', membersData);
-      setMembers(membersData || []);
 
       // Buscar convites pendentes
       const { data: invitesData, error: invitesError } = await supabase
-        .from('user_invitations')
+        .from('invitations')
         .select('id, email, role, created_at, expires_at')
         .eq('organization_id', currentOrgId)
         .is('accepted_at', null);
 
-      if (invitesError) {
-        console.error('Error fetching invitations:', invitesError);
-        throw invitesError;
-      }
+      if (invitesError) throw invitesError;
 
       console.log('Invitations data:', invitesData);
       setInvitations(invitesData || []);
